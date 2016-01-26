@@ -106,7 +106,17 @@ def installOrReinstallProduct(portal, product_name, out=None, hidden=False):
     If product is already installed test if it needs to be reinstalled. Also
     fix skins after reinstalling
     """
-    qi = getToolByName(portal, 'portal_quickinstaller')
+    try:
+        from Products.CMFPlone.utils import get_installer
+    except ImportError:
+        # BBB For Plone 5.0 and lower.
+        qi = getToolByName(portal, 'portal_quickinstaller', None)
+        if qi is None:
+            return
+        old_qi = True
+    else:
+        qi = get_installer(portal)
+        old_qi = False
     if not qi.isProductInstalled(product_name):
         qi.installProduct(product_name, hidden=hidden)
         # Refresh skins
@@ -114,7 +124,7 @@ def installOrReinstallProduct(portal, product_name, out=None, hidden=False):
         if getattr(portal, 'REQUEST', None):
             portal.setupCurrentSkin(portal.REQUEST)
         logger.info("Installed %s" % product_name)
-    else:
+    elif old_qi:
         info = qi._getOb(product_name)
         installed_version = info.getInstalledVersion()
         product_version = qi.getProductVersion(product_name)
@@ -125,6 +135,9 @@ def installOrReinstallProduct(portal, product_name, out=None, hidden=False):
                                           product_version))
         else:
             logger.info('%s already installed.' % product_name)
+    else:
+        qi.upgradeProduct(product_name)
+        logger.info("Upgraded %s", product_name)
 
 
 def loadMigrationProfile(context, profile, steps=_marker):
