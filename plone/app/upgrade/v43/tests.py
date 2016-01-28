@@ -113,6 +113,13 @@ class TestMigrations_v4_3alpha1(MigrationTest):
             title='And if one green bottle should accidentally fall',
         )
 
+        try:
+            # since PLIP 1343 - merge collective.indexing this is needed
+            from Products.CMFCore.indexing import processQueue
+            processQueue()
+        except ImportError:
+            pass
+
         # Change title of both, shouldn't be reindexed yet
         portal['accidentally-fall'].title = 'fell'
         portal['num-title'].title = '9 green bottles, hanging on the wall'
