@@ -241,7 +241,20 @@
             description=""
             handler="..utils.null_upgrade_step"
             />
+
     </genericsetup:upgradeSteps>
 
+    <genericsetup:upgradeSteps
+        source="4313"
+        destination="4314"
+        profile="Products.CMFPlone:plone">
+
+        <genericsetup:upgradeStep
+            title="Add default search options"
+            description="Add sort_on field to search controlpanel."
+            handler=".final.addSortOnProperty"
+            />
+
+    </genericsetup:upgradeSteps>
 
 </configure>
