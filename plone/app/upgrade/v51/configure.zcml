@@ -35,6 +35,19 @@ Remove deprecated ``mockup-registry`` and ``mockup-parser`` resources.
            handler=".alphas.to51alpha2"
            />
 
+   </gs:upgradeSteps>
+
+   <gs:upgradeSteps
+       source="5102"
+       destination="5103"
+       profile="Products.CMFPlone:plone">
+
+       <gs:upgradeStep
+           title="Run to51alpha3 upgrade profile."
+           description="Add image scaling options to image handling ctrlpanel"
+           handler=".alphas.to51alpha3"
+           />
+
     </gs:upgradeSteps>
 
 </configure>
